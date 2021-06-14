@@ -5,6 +5,10 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+/**
+ * Setter는 실무에서는 닫아주는것이 좋다.
+ * 엔티티 변경할 때는 변경 지점이 명확하도록 변경을 위한 비즈니스 메서드를 별도로 제공해야 한다.
+ */
 @Entity
 @Getter @Setter
 public class Delivery { // Order와 1:1 관계. 무엇을 중심으로 조회하는지를 생각해서 FK를 정하면 된다.
@@ -14,7 +18,7 @@ public class Delivery { // Order와 1:1 관계. 무엇을 중심으로 조회하
     @Column(name = "delivery_id")
     private Long id;
 
-    @OneToOne(mappedBy = "delivery") //delivery라는 칼럼과 매핑.
+    @OneToOne(mappedBy = "delivery", fetch = FetchType.LAZY) //delivery라는 칼럼과 매핑.
     private Order order;
 
     @Embedded
