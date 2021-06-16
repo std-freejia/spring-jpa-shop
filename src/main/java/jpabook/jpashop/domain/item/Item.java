@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE) // 상속받은 애들을 전부 같은 테이블에 넣음.
-@DiscriminatorColumn(name="dtype") // 상속받은 객체를 구분할 컬럼명.
+@DiscriminatorColumn(name="dtype") // 상속받은 객체를 구분할 컬럼명.(album / book/ movie)
 @Getter @Setter
 public abstract class Item { // 상속 관계 매핑
 
