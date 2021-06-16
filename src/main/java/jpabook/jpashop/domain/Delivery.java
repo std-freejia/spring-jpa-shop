@@ -18,6 +18,7 @@ public class Delivery { // Order와 1:1 관계. 무엇을 중심으로 조회하
     @Column(name = "delivery_id")
     private Long id;
 
+    // 모든 연관관계는 '지연로딩' LAZY 으로!!
     @OneToOne(mappedBy = "delivery", fetch = FetchType.LAZY) //delivery라는 칼럼과 매핑.
     private Order order;
 

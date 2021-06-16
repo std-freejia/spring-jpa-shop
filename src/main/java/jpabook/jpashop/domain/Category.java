@@ -20,16 +20,16 @@ public class Category {
 
     private String name;
 
-    // 실무에서는 다대다 관계 가급적 쓰지 말기. 여기서는 일부러 복잡한 예시를 만든 것임. (카테고리와 아이템.)
-    @ManyToMany
+    // 실무에서는 다대다 관계 가급적 쓰지 말기. 데이터 추가 못하기 때문. 여기서는 일부러 복잡한 예시를 만든 것임. (카테고리와 아이템.)
+    @ManyToMany // 일대다, 다대일로 풀어낼 중간 테이블이 필요하다.
     @JoinTable(name = "category_item",
-            joinColumns = @JoinColumn(name="category_id"),
-            inverseJoinColumns = @JoinColumn(name = "item_id")
+            joinColumns = @JoinColumn(name="category_id"),     // FK
+            inverseJoinColumns = @JoinColumn(name = "item_id") // FK
     )
     private List<Item> items = new ArrayList<>();
 
     // 카레고리 계층구조.
-    @ManyToOne // 내 부모는 한 명.
+    @ManyToOne(fetch=FetchType.LAZY) // 내 부모는 한 명.
     @JoinColumn(name="parent_id")
     private Category parent; // 내 부모는 내 타입이니까 Category.
 

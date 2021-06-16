@@ -29,6 +29,4 @@ public class Member {
 
     // private LocalDateTime orderDate; // 주문시간
 
-    private OrderStatus status; // 주문 상태 [ORDER, CANCEL]
-
 }
