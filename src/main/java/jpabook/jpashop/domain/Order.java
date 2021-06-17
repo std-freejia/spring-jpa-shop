@@ -52,4 +52,50 @@ public class Order { // @XToOne(OneToOne, ManyToOne)관계는 기본이 즉시�
         this.delivery = delivery;
         delivery.setOrder(this);
     }
+
+    /** 생성 메서드 */
+    public static Order createOrder(Member member, Delivery delivery, OrderItem... orderItems){
+        Order order = new Order();
+        order.setMember(member);
+        order.setDelivery(delivery);
+
+        for(OrderItem item : orderItems){
+            order.addOrderItem(item);
+        }
+
+        order.setStatus(OrderStatus.ORDER); // 주문 상태로 초기화.
+        order.setOrderDate(LocalDateTime.now()); //주문 시간 정보
+
+        return order;
+    }
+
+    /** 주문 취소 */
+    public void cancel(){
+        // 배송 상태를 확인. 이미 배송됬으면, 취소 불가.
+        if(delivery.getStatus() == DeliveryStatus.COMP){
+            throw new IllegalStateException("이미 배송된 제품입니다.");
+        }
+        // 주문 상태를 취소로 변경.
+        this.setStatus(OrderStatus.CANCEL);
+        // 주문 수량 원복.
+        for(OrderItem orderItem : this.orderItems){
+            orderItem.cancel();
+        }
+    }
+
+
+    // == 조회 로직 ==//
+    /** 전체 주문 가격 조회 */
+    public int getTotalPrice(){
+        return orderItems.stream()
+                .mapToInt(OrderItem::getTotalPrice)
+                .sum();
+        /*
+                int totalPrice = 0;
+                for(OrderItem item : orderItems){
+                    totalPrice += (item.getTotalPrice());
+                }
+                return totalPrice;
+         */
+    }
 }
