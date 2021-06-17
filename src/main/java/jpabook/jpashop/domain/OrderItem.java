@@ -1,7 +1,9 @@
 package jpabook.jpashop.domain;
 
 import jpabook.jpashop.domain.item.Item;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -9,6 +11,7 @@ import javax.persistence.*;
 @Entity
 @Table(name="order_item")
 @Getter @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderItem { // @ManyToOne 은 반드시 LAZY 로 지정!! xToMany 는 디폴트가 LAZY
 
     @Id @GeneratedValue
@@ -28,6 +31,11 @@ public class OrderItem { // @ManyToOne 은 반드시 LAZY 로 지정!! xToMany �
     private int orderPrice; // 주문 가격
 
     private int count; // 주문 수량
+
+/**     protected OrderItem(){
+        // 아래의 생성 메서드(createOrderItem)로만 생성하도록 막아둔다.
+        // lombok 애노테이션으로 해결 가능. --> @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    }  */
 
     // == 생성 메서드 == //
     public static OrderItem createOrderItem(Item item, int orderPrice, int count){

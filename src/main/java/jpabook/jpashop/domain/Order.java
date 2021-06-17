@@ -1,6 +1,8 @@
 package jpabook.jpashop.domain;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -11,6 +13,7 @@ import java.util.List;
 @Entity
 @Table(name="orders") // 테이블 이름 매핑
 @Getter @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order { // @XToOne(OneToOne, ManyToOne)관계는 기본이 즉시로딩이므로, 반드시 지연로딩(LAZY)로 설정하기!!
 
     @Id @GeneratedValue
@@ -53,7 +56,7 @@ public class Order { // @XToOne(OneToOne, ManyToOne)관계는 기본이 즉시�
         delivery.setOrder(this);
     }
 
-    /** 생성 메서드 */
+    /** 생성 메서드 */   // 주문을 생성한다.
     public static Order createOrder(Member member, Delivery delivery, OrderItem... orderItems){
         Order order = new Order();
         order.setMember(member);
