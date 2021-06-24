@@ -1,9 +1,6 @@
 package jpabook.jpashop.service;
 
-import jpabook.jpashop.domain.Delivery;
-import jpabook.jpashop.domain.Member;
-import jpabook.jpashop.domain.Order;
-import jpabook.jpashop.domain.OrderItem;
+import jpabook.jpashop.domain.*;
 import jpabook.jpashop.domain.item.Item;
 import jpabook.jpashop.repository.ItemRepository;
 import jpabook.jpashop.repository.MemberRepository;
@@ -25,28 +22,33 @@ public class OrderService {
 
     // 주문 생성
     @Transactional
-    public Long order(Long memberId, Long orderId, int count){ // 주문 회원, 주문 상품id, 상품 개수.
+    public Long order(Long memberId, Long itemId, int count){ // 주문 회원, 주문 상품id, 상품 개수.
+
+        // 엔티티 조회
         Member member = memberRepository.findOne(memberId);
-        Item item = itemRepository.findOne(orderId);
+        Item item = itemRepository.findOne(itemId);
 
         // 배송정보 세팅
         Delivery delivery = new Delivery();
         delivery.setAddress(member.getAddress());
+        delivery.setStatus(DeliveryStatus.READY);
 
         // 주문 상품 생성 (예제에서는 주문할 때, 상품 종류를 1개만 택하도록 제한했음)
         OrderItem orderItem = OrderItem.createOrderItem(item, item.getPrice(), count);
 
+        /**
+         * Order 의 필드로 delivery, orderItem 이 있다.
+         * cascade.all 이 되어있으니까, 각각의 테이블에 함께 한꺼번에 persist 된다. 별도의 레포지토리에 저장할 필요가 없다.
+         * 어디까지 Cascade 해야 할 지를(어디까지 얽혀 놓을지를) 고민해야 한다.
+         *
+         * 이 경우, Delivery를 참조하는 것은 Order 뿐이다.
+         * OrderItem을 참조하는 것은 Order 뿐이다.
+         */
+
         // [중요] 주문 생성
         Order order = Order.createOrder(member, delivery, orderItem);
+        // 주문 저장
         orderRepository.save(order);
-            /**
-             * Order 의 필드로 delivery, orderItem 이 있다.
-             * cascade.all 이 되어있으니까, 각각의 테이블에 함께 한꺼번에 persist 된다. 별도의 레포지토리에 저장할 필요가 없다.
-             * 어디까지 Cascade 해야 할 지 고민해야 한다. 어디까지 얽혀 놓을지.
-             *
-             * 이 경우, Delivery를 참조하는 것은 Order 뿐이다.
-             * OrderItem을 참조하는 것은 Order 뿐이다.
-             */
         return order.getId();
     }
 

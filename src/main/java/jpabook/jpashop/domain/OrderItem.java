@@ -45,7 +45,6 @@ public class OrderItem { // @ManyToOne 은 반드시 LAZY 로 지정!! xToMany �
         orderItem.setCount(count);
 
         item.removeStock(count);
-
         return orderItem;
     }
 

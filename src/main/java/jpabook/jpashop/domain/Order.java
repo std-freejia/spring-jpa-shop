@@ -13,7 +13,7 @@ import java.util.List;
 @Entity
 @Table(name="orders") // 테이블 이름 매핑
 @Getter @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // 기본생성자로 생성하지 않고, 특정 파라미터를 가지고만 생성하도록 유도.
 public class Order { // @XToOne(OneToOne, ManyToOne)관계는 기본이 즉시로딩이므로, 반드시 지연로딩(LAZY)로 설정하기!!
 
     @Id @GeneratedValue
@@ -51,7 +51,7 @@ public class Order { // @XToOne(OneToOne, ManyToOne)관계는 기본이 즉시�
         orderItem.setOrder(this);
     }
 
-    public void setDelivery(Delivery dilivery){ // Delivery의 delivery_id를 FK로.
+    public void setDelivery(Delivery delivery){ // Delivery의 delivery_id를 FK로.
         this.delivery = delivery;
         delivery.setOrder(this);
     }
