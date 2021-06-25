@@ -48,6 +48,13 @@ public class MemberController {
 
     @GetMapping("/members")
     public String list(Model model){
+        /**
+         * 화면에 뿌리는데, 엔티티를 손 대지 않아도 되는 경우에만 Member 엔티티를 그대로 쓴다.
+         * 비즈니스 로직을 위해 설계된 엔티티는 순수하게 형태를 유지하도록 하기.
+         * 비즈니스 로직이 아닌 화면에서 넘어오고 화면으로 넘기는 데이터는 dto 를 쓰는편이 좋다.
+         * [중요]
+         * api를 만들 때는 엔티티를 절대 외부로 반환하면 안된다!
+         */
         List<Member> members = memberService.findMembers();
         model.addAttribute("members", members);
         return "members/memberList";
