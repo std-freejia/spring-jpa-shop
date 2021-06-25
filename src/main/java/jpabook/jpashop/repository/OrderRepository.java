@@ -32,7 +32,7 @@ public class OrderRepository {
     // 주문 내역 검색 (동적 쿼리 필요)
     public List<Order> findAll(OrderSearch orderSearch){ // member와 조인한 Order를 조회한다
         // jpql 을 '문자열'로 생성하는 것은 버그 확률도 많고 사람이 할 짓이 아님. Criteria 도 안씀.
-        // 동적 쿼리르 위한 가장 좋은 해결책은 QueryDSL 이다. 
+        // 동적 쿼리르 위한 가장 좋은 해결책은 QueryDSL 이다.
         return null;
     }
 
