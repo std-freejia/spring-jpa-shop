@@ -23,17 +23,19 @@ public class ItemService {
 
     /** 매우 중요 [변경 감지 기능] */
     @Transactional
-    public Item updateItem(Long itemId, Book param){
-        Item findItem = itemRepository.findOne(itemId);
+    public Item updateItem(Long itemId, String name, int price, int stockQuantity){
+
         /**
          * findItem 은 레포지토리에서 꺼내 왔으니까 영속 상태다!
          * @Transactional 때문에 JPA는 findItem의 변경 사항을 커밋한다. 커밋 후에 flush 수행.
          * 영속 상태 이므로 변경이 감지되어 udpate sql이 실행된다.
          * itemRepository.save(); 할 필요가 없다!
          */
-        findItem.setPrice(param.getPrice());
-        findItem.setName(param.getName());
-        findItem.setStockQuantity(param.getStockQuantity());
+        Item findItem = itemRepository.findOne(itemId);
+
+        findItem.setName(name);
+        findItem.setPrice(price);
+        findItem.setStockQuantity(stockQuantity);
 
         /**
          * setter 이용 지양하기.

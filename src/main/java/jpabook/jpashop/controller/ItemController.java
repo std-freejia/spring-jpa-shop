@@ -69,12 +69,10 @@ public class ItemController {
     }
 
     @PostMapping("items/{itemId}/edit")
-    public String updateItem(@PathVariable String itemId, @ModelAttribute("form") BookForm form){
+    public String updateItem(@PathVariable Long itemId, @ModelAttribute("form") BookForm form){
         /**
          * id를 조작하여 넘기는 보안 이슈가 있다. 주의하기
          */
-        Book book = new Book();
-        book.setId(form.getId());
 
         /** [매 우 중 요 ]
          * 준영속 엔티티
@@ -87,6 +85,9 @@ public class ItemController {
          * 2) 병합(merge) 사용
          */
 
+        /*
+        Book book = new Book(); // BookForm은 웹 계층에서만 사용!
+        book.setId(form.getId());
         book.setName(form.getName());
         book.setPrice(form.getPrice());
         book.setStockQuantity(form.getStockQuantity());
@@ -94,6 +95,14 @@ public class ItemController {
         book.setIsbn(form.getIsbn());
 
         itemService.saveItem(book);
+
+        setter를 노출한 컨트롤러의 update 기능을 더 나은 설계로 바꾸자!
+        */
+
+        itemService.updateItem(itemId, form.getName(), form.getPrice(), form.getStockQuantity());
+
+        // 만약 업데이트 할 데이터가 많다면, 서비스 계증에 DTO를 하나 만들자. UpdateItemDto
+
         return "redirect:/items";
     }
 
