@@ -63,8 +63,7 @@ public class OrderService {
     }
 
     // 검색 (주문을 검색한다.)
- /*   public List<Order> findOrder(){
-
+    public List<Order> findOrder(OrderSearch orderSearch){
+        return orderRepository.findAllByCriteria(orderSearch);
     }
-*/
 }
