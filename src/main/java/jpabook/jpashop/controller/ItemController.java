@@ -75,6 +75,18 @@ public class ItemController {
          */
         Book book = new Book();
         book.setId(form.getId());
+
+        /** [매 우 중 요 ]
+         * 준영속 엔티티
+         * 이미 id가 있는 객체 (준영속상태의 객체라고 한다.) jpa가 식별할 수 있는 id를 이미 가졌다는 의미.
+         * 이미 db에 저장되었다가 다시 꺼낸 정보라는 뜻.
+         * 그래서 jpa가 관리를 안한다!
+         *
+         * 준영속 엔티티 수정하는 2가지 방법
+         * 1) 변경감지기능 사용
+         * 2) 병합(merge) 사용
+         */
+
         book.setName(form.getName());
         book.setPrice(form.getPrice());
         book.setStockQuantity(form.getStockQuantity());
