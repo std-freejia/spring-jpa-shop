@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ public class Member {
     @Column(name="member_id") // 컬럼명은 테이블명+변수명 으로 정하는 것이 관례.
     private Long id;
 
+    //@NotEmpty -> 엔티티는 엔티티역할만 하도록 해야함. 프레젠테이션 계층에 필요한 검증 로직이 끼어들지 않도록 하자.
     private String name;
 
     @Embedded // 내장타입이라고 명시
