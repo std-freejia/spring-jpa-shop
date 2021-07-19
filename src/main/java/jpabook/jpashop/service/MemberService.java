@@ -52,4 +52,11 @@ public class MemberService {
         return memberRepository.findOne(memberId);
     }
 
+    @Transactional
+    public void update(Long id, String name) { /** 회원 수정 API 에서 사용. */
+        Member member = memberRepository.findOne(id); // member 가 영속상태로 올라온다.
+        member.setName(name);
+        /** update() 가 종료되면, @Transactional 에 의해 트렌젝션 커밋이 되고 JPA가 플러시. */
+        /** update 후에 즉시 조회하지 말자. 수정과 조회를 분리하기 위함. */
+    }
 }
