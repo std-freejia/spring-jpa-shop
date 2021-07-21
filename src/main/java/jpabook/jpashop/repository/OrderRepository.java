@@ -74,4 +74,16 @@ public class OrderRepository {
                         " join fetch o.delivery d", Order.class
         ).getResultList();
     }
+
+    // V4. JPA에서 DTO를 바로조회
+    public List<OrderSimpleQueryDto> findOrderDtos() {
+        /** DTO에 매핑하기 위해 new Operation 을 써야 한다. */
+        return em.createQuery(
+                "select new jpabook.jpashop.repository.OrderSimpleQueryDto(" +
+                        "o.id, m.name, o.orderDate, o.status, d.address) " +
+                        " from Order o"+
+                        " join o.member m" +
+                        " join o.delivery d", OrderSimpleQueryDto.class)
+                .getResultList();
+    }
 }
