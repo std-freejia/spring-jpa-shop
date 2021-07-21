@@ -1,5 +1,6 @@
 package jpabook.jpashop.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +20,7 @@ public class Delivery { // Order와 1:1 관계. 무엇을 중심으로 조회하
     private Long id;
 
     // 모든 연관관계는 '지연로딩' LAZY 으로!!
+    @JsonIgnore /** 양방향 연관관계에서 한 쪽은 JsonIgnore 해야 무한루프를 피할 수 있다. */
     @OneToOne(mappedBy = "delivery", fetch = FetchType.LAZY) //delivery라는 칼럼과 매핑.
     private Order order;
 

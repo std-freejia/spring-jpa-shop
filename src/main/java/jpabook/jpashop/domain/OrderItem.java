@@ -1,5 +1,6 @@
 package jpabook.jpashop.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jpabook.jpashop.domain.item.Item;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -24,6 +25,7 @@ public class OrderItem { // @ManyToOne 은 반드시 LAZY 로 지정!! xToMany �
     @JoinColumn(name="item_id") // FK
     private Item item; // 주문 상품
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="order_id") // FK 연관관계의 주인.
     private Order order; // 하나의 Order는 여러개의 OrderItem을 가진다.

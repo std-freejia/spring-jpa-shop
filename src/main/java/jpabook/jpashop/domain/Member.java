@@ -1,5 +1,6 @@
 package jpabook.jpashop.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,6 +25,7 @@ public class Member {
     @Embedded // 내장타입이라고 명시
     private Address address;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "member")  // Order 테이블에 있는 "member"에 의해 매핑당함. 매핑 기준.
     private List<Order> orders = new ArrayList<>(); // 한 사람이 여러 주문 생성 가능.
 
