@@ -54,6 +54,14 @@ public class OrderSimpleApiController {
         // ORDER 1개 -> Member N명 -> Delivery N개 ... 쿼리가 어마어마하게 실행되는 문제
     }
 
+    @GetMapping("/api/v3/simple-orders")
+    public List<SimpleOrderDto> ordersV3(){ // V2, V3는 똑같은데 쿼리만 다르다.
+        List<Order> orders = orderRepository.findAllWithMemberDelivery();
+        return orders.stream()
+                .map(o -> new SimpleOrderDto(o))
+                .collect(Collectors.toList());
+    }
+
     @Data
     static class SimpleOrderDto{
         private Long orderId;
@@ -67,7 +75,7 @@ public class OrderSimpleApiController {
             name = order.getMember().getName(); // LAZY 초기화 (영속성 컨텍스트를 탐색 후 DB쿼리 실행)
             orderDate = order.getOrderDate();
             orderStatus = order.getStatus();
-            address = order.getDelivery().getAddress(); // LAZY 초기화 
+            address = order.getDelivery().getAddress(); // LAZY 초기화
         }
     }
 

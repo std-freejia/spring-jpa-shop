@@ -61,4 +61,17 @@ public class OrderRepository {
         TypedQuery<Order> query = em.createQuery(cq).setMaxResults(1000); //최대 1000건
         return query.getResultList();
     }
+
+
+    /** [fetch join]
+     * order 가져올 때, member와 delevery 테이블도 조회하고 싶음
+     * 프록시객체 안쓰고 필요한 것 다 가져옴. fetch개념은 JPA에만 있는 문법.
+     * */
+    public List<Order> findAllWithMemberDelivery() {
+        return em.createQuery(
+                "select o from Order o"+
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d", Order.class
+        ).getResultList();
+    }
 }
