@@ -1,14 +1,16 @@
 package jpabook.jpashop.api;
 
-import jpabook.jpashop.domain.Order;
-import jpabook.jpashop.domain.OrderItem;
-import jpabook.jpashop.domain.OrderSearch;
+import jpabook.jpashop.domain.*;
 import jpabook.jpashop.repository.OrderRepository;
+import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,5 +29,51 @@ public class OrderApiController { // "컬렉션 조회 최적화"
             orderItems.stream().forEach(o->o.getItem().getName()); //Lazy 강제 초기화
         }
         return all;
+    }
+
+    @GetMapping("/api/v2/orders") // v2 : 엔티티를 DTO로 변환
+    public List<OrderDto> ordersV2(){
+        List<Order> orders = orderRepository.findAllByCriteria(new OrderSearch());
+        return orders.stream()
+                .map(o-> new OrderDto(o))
+                .collect(Collectors.toList());
+    }
+
+    @Getter
+    static class OrderDto{
+
+        private Long orderId;
+        private String name;
+        private LocalDateTime orderDate;
+        private OrderStatus orderStatus;
+        private Address address;
+        private List<OrderItemDto> orderItems; /** OrderItem 조차 DTO로 바꿔야한다!! */
+
+        public OrderDto(Order order) {
+            orderId = order.getId();
+            name = order.getMember().getName(); // LAZY 초기화 (영속성 컨텍스트를 탐색 후 DB쿼리 실행)
+            orderDate = order.getOrderDate();
+            orderStatus = order.getStatus();
+            address = order.getDelivery().getAddress(); // LAZY 초기화
+
+            // orderItems는 엔티티다. orderItems 생성자로 '필요한 필드만' 데이터를 세팅하자.
+            orderItems = order.getOrderItems().stream()
+                    .map(orderItem -> new OrderItemDto(orderItem))
+                    .collect(Collectors.toList());
+        }
+    }
+
+    @Getter
+    static class OrderItemDto{ /** OrderItem 엔티티를 OrderItemDto DTO로 변환 */
+
+        private String itemName; // 상품명
+        private int orderPrice; // 주문가격
+        private int count; // 주문수량
+
+        public OrderItemDto(OrderItem orderItem) {
+            itemName = orderItem.getItem().getName();
+            orderPrice = orderItem.getOrderPrice();
+            count = orderItem.getCount();
+        }
     }
 }
