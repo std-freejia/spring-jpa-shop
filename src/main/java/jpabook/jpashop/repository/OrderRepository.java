@@ -66,6 +66,7 @@ public class OrderRepository {
     /** [fetch join]
      * order 가져올 때, member와 delevery 테이블도 조회하고 싶음
      * 프록시객체 안쓰고 필요한 것 다 가져옴. fetch개념은 JPA에만 있는 문법.
+     * 칼럼 하나하나 명시하지 않았기 때문에, 재사용성이 좋다.
      * */
     public List<Order> findAllWithMemberDelivery() {
         return em.createQuery(
@@ -75,15 +76,18 @@ public class OrderRepository {
         ).getResultList();
     }
 
-    // V4. JPA에서 DTO를 바로조회
+    // V4. JPA에서 DTO를 바로조회.
+    // 그치만 필드 몇개 덜 가져온다고 해도 V3보다 성능이 엄청 차이나진 않는다. 경우에 따라 V3, V4 방식 간에 성능테스트 필요!
+    /*
     public List<OrderSimpleQueryDto> findOrderDtos() {
-        /** DTO에 매핑하기 위해 new Operation 을 써야 한다. */
+        // DTO에 매핑하기 위해 new Operation 을 써야 한다.
         return em.createQuery(
-                "select new jpabook.jpashop.repository.OrderSimpleQueryDto(" +
+                "select new jpabook.jpashop.repository.order.simplequery.OrderSimpleQueryDto(" +
                         "o.id, m.name, o.orderDate, o.status, d.address) " +
                         " from Order o"+
                         " join o.member m" +
                         " join o.delivery d", OrderSimpleQueryDto.class)
                 .getResultList();
     }
+    */
 }
