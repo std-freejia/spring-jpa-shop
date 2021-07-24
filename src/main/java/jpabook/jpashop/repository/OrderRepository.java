@@ -76,6 +76,16 @@ public class OrderRepository {
         ).getResultList();
     }
 
+    public List<Order> findAllWithItem() { /** V3. 페치조인으로 컬렉션 조회 최적화 */
+        return em.createQuery(
+                "select distinct o from Order o"+
+                        " join fetch o.member m"+
+                        " join fetch o.delivery d"+
+                        " join fetch o.orderItems oi"+
+                        " join fetch oi.item i", Order.class)
+                .getResultList(); // 참고로 이렇게 쿼리가 길어지거나 복잡해지면 queryDSL쓰기!
+    }
+
     // V4. JPA에서 DTO를 바로조회.
     // 그치만 필드 몇개 덜 가져온다고 해도 V3보다 성능이 엄청 차이나진 않는다. 경우에 따라 V3, V4 방식 간에 성능테스트 필요!
     /*

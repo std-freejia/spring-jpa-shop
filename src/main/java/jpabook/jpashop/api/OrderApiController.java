@@ -76,4 +76,16 @@ public class OrderApiController { // "컬렉션 조회 최적화"
             count = orderItem.getCount();
         }
     }
+
+    @GetMapping("/api/v3/orders") // v3 : 엔티티를 DTO로 변환- 페치조인!
+    public List<OrderDto> ordersV3(){
+        List<Order> orders = orderRepository.findAllWithItem();
+        for (Order order : orders) {
+            System.out.println("order = " + order + ", order = " + order.getId());
+        }
+        List<OrderDto> result = orders.stream()
+                .map(o->new OrderDto(o))
+                .collect(Collectors.toList());
+        return result;
+    }
 }
