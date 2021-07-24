@@ -76,7 +76,7 @@ public class OrderRepository {
         ).getResultList();
     }
 
-    public List<Order> findAllWithItem() { /** V3. 페치조인으로 컬렉션 조회 최적화 */
+    public List<Order> findAllWithItem() { /** V3. 페치조인으로 컬렉션 조회 최적화! 단점은 페이징 불가. */
         return em.createQuery(
                 "select distinct o from Order o"+
                         " join fetch o.member m"+
