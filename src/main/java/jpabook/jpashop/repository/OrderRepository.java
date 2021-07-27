@@ -62,18 +62,27 @@ public class OrderRepository {
         return query.getResultList();
     }
 
+    public List<Order> findAllWithMemberDelivery() { // @GetMapping("/api/v3/simple-orders")
+        return em.createQuery(
+                "select o from Order o"+
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d", Order.class
+        ).getResultList();
+    }
 
     /** [fetch join]
      * order 가져올 때, member와 delevery 테이블도 조회하고 싶음
      * 프록시객체 안쓰고 필요한 것 다 가져옴. fetch개념은 JPA에만 있는 문법.
      * 칼럼 하나하나 명시하지 않았기 때문에, 재사용성이 좋다.
      * */
-    public List<Order> findAllWithMemberDelivery() {
+    public List<Order> findAllWithMemberDelivery(int offset, int limit) {
         return em.createQuery(
                 "select o from Order o"+
                         " join fetch o.member m" +
                         " join fetch o.delivery d", Order.class
-        ).getResultList();
+                ).setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
     }
 
     public List<Order> findAllWithItem() { /** V3. 페치조인으로 컬렉션 조회 최적화! 단점은 페이징 불가. */

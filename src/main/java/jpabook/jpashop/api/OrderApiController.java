@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
@@ -39,9 +40,33 @@ public class OrderApiController { // "컬렉션 조회 최적화"
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/api/v3/orders") // v3 : 엔티티를 DTO로 변환- 컬렉션 페치조인!
+    /** 컬렉션 패치조인의 단점 : 페이징 불가능.
+     일대다 패치조인인 경우, 페이징 하면 안됩니다. (Order와 OrderItem의 관계에서 일대다)
+     일대다 컬렉션 패치조인은 딱 하나만 써야 한다.
+     */
+    @GetMapping("/api/v3/orders") // v3 : 엔티티를 DTO로 변환- 컬렉션 페치조인!, 단점은 중복이 많다는 것.
     public List<OrderDto> ordersV3(){
         List<Order> orders = orderRepository.findAllWithItem();
+        return orders.stream()
+                .map(o->new OrderDto(o))
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/api/v3.1/orders") // v3 : 엔티티를 DTO로 변환- 컬렉션 페치조인!
+    public List<OrderDto> ordersV3_page(
+            @RequestParam(value="offset", defaultValue = "0") int offset,
+            @RequestParam(value="limit", defaultValue = "100") int limit){
+        List<Order> orders = orderRepository.findAllWithMemberDelivery(offset, limit);
+        /**
+         * default_batch_fetch_size: 10  (인쿼리 수행하여 가져올 개수를 설정)
+         *
+         * Order와 ToOne관계인 member와 Delivery는 fetch join으로 가져온다. -> 쿼리 1개
+         * Order와 일대다 연관관계인 OrderItem을 한번에 인쿼리로 수행.
+         * 즉, 모든 Order 레코드에 대응되는 OrderItem 레코드들을 전부 가져온다. 모든 OrderDto에 넣을 OrderItem들을 한번에. -> 쿼리 1개
+         * OrderItem과 일대다 연관관계인 Item을 한번에 인쿼리로 수행. -> 쿼리 1개
+         *
+         * 총 3번의 쿼리로 최적화.
+         */
         return orders.stream()
                 .map(o->new OrderDto(o))
                 .collect(Collectors.toList());
