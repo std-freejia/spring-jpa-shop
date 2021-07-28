@@ -2,6 +2,8 @@ package jpabook.jpashop.api;
 
 import jpabook.jpashop.domain.*;
 import jpabook.jpashop.repository.OrderRepository;
+import jpabook.jpashop.repository.order.query.OrderQueryDto;
+import jpabook.jpashop.repository.order.query.OrderQueryRepository;
 import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +19,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderApiController { // "컬렉션 조회 최적화"
 
-    private final OrderRepository orderRepository;
+    private final OrderRepository orderRepository; // 엔티티 처리 위함. 중요한 비즈니스 쿼리를 위해.
+    private final OrderQueryRepository orderQueryRepository; // 화면이나 api(보통 쿼리와 밀접함)에 최적화되어 데이터를 다룰 때.
 
     @GetMapping("/api/v1/orders") // v1 : 엔티티를 직접 노출하므로 좋은 방법이 아니다.
     public List<Order> ordersV1(){
@@ -70,6 +73,11 @@ public class OrderApiController { // "컬렉션 조회 최적화"
         return orders.stream()
                 .map(o->new OrderDto(o))
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/api/v4/orders") // v4
+    public List<OrderQueryDto> ordersV4(){
+        return orderQueryRepository.findOrderQueryDtos();
     }
 
     @Getter

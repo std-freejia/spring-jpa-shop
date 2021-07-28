@@ -15,7 +15,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class OrderRepository {
+public class OrderRepository { // OrderRepository 는 엔티티 조회를 위해 존재.
 
     private final EntityManager em;
 
